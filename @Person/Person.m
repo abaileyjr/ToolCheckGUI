@@ -1,4 +1,4 @@
-classdef Person
+classdef Person < handle
     %PERSON Summary of this class goes here
     %   Detailed explanation goes here
     
