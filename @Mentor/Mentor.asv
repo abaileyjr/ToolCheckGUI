@@ -4,7 +4,6 @@ classdef Mentor < Person
     
     properties
         School;
-        Students;
     end
     
     methods
@@ -17,8 +16,8 @@ classdef Mentor < Person
             obj.School = name;
         end
         
-        function obj = setStudent(obj, student)
-            obj.Students = student;
+        function obj = setSchool(obj, name)
+            obj.School = name;
         end
     end
     

@@ -6,6 +6,11 @@ classdef Staff < Person
     end
     
     methods
+        function obj = Staff(name)
+            obj = obj@Person(name);
+            obj.CanPurchase = 1;
+        end
+        
     end
     
 end
