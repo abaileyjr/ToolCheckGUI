@@ -1,9 +1,22 @@
 classdef Student < Person
-    %STUDENT Summary of this class goes here
-    %   Detailed explanation goes here
+    %STUDENT Creation of a Student object for tool checkout
+    %   Student is a subclass for the superclass Person.  In addition to
+    %   the Person class properties, each student has a School property and
+    %   a Mentors property, which defines the School and Mentors associated
+    %   with each individual student
+    %
+    %   The constructor sets the name of the student and the CanPurchase
+    %   property.  Only Staff can purchase.
+    %   The following additional methods set respective properties of the
+    %   Student.
+    %       setSchool(obj, school)
+    %       setMentors(obj, mentors)
+    %
+    %   Created by: Alice Chow, 23404699
     
     properties
-        Mentors
+        School;
+        Mentors;
     end
     
     methods
@@ -16,8 +29,8 @@ classdef Student < Person
             obj.School = name;
         end
         
-        function obj = setMentor(obj, mentor)
-            obj.Mentors = mentor;
+        function obj = setMentors(obj, mentors)
+            obj.Mentors = mentors;
         end
     end
     
