@@ -3,7 +3,7 @@ classdef toolCheckout < handle
     
     properties
         Students = {};
-        Mentors = {};
+        Mentors  = {};
         Staffs = {};
         Schools = {};
     end
@@ -22,23 +22,22 @@ classdef toolCheckout < handle
             % contains the list of schools.
             
             for i = 1:length(stud)
-                toolCheckout.Students{i,1} = Student(stud{i,1});
-                toolCheckout.Students{i,1}.setSchool(stud{i,2});
+                obj.Students{i,1} = Student(stud{i,1});
+                obj.Students{i,1}.setSchool(stud{i,2});
             end
             
             for i = 1:length(men)
-                toolCheckout.Mentors{i,1} = Mentor(men{i,1});
-                toolCheckout.Mentors{i,1}.setSchool(men{i,2});
+                obj.Mentors{i,1} = Mentor(men{i,1});
+                obj.Mentors{i,1}.setSchool(men{i,2});
             end
             
             for i = 1:length(staf)
-                toolCheckout.Staffs{i,1} = Staff(staf{i,1});
+                obj.Staffs{i,1} = Staff(staf{i,1});
             end
             
             for i = 1:length(sch)
-                toolCheckout.Schools{i,1} = School(sch{i,1});
+                obj.Schools{i,1} = School(sch{i,1});
             end
-            
         end
         
     end
