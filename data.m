@@ -1,8 +1,10 @@
-        function [student, mentor, staff, school] = data() 
+        function [student, mentor, staff, school, purch, tool] = data() 
             staff = {}; %Sheet 1
             mentor = {}; % Sheet 2
             student = {}; % Sheet 3
             school = {}; % Sheet4
+            purch = {}; % Sheet 5
+            tool = {}; % Sheet 6
             
             % Creates empty cells, may not be needed
             
@@ -10,7 +12,10 @@
             [~, mentor, ~] = xlsread('Database','Mentor');
             [~, student, ~] = xlsread('Database','Student');
             [~, school, ~] = xlsread('Database','School');
+            [~,purch, ~] = xlsread('Database','Purchase');
+            [~,tool,~] = xlsread('Database','Tool');
             
             % Reads the database xls file and stores the data in the
-            % respective student, ,mentor, staff, and school arrays.
+            % respective student, ,mentor, staff, school, and purchasabel 
+            % arrays.
         end
