@@ -6,6 +6,8 @@ classdef toolCheckout < handle
         Mentors  = {};
         Staffs = {};
         Schools = {};
+        Purchasables={};
+        Tools = {};
     end
     
    
@@ -13,7 +15,7 @@ classdef toolCheckout < handle
     methods
         
         function obj = toolCheckout()
-            [stud, men, staf, sch] = data();
+            [stud, men, staf, sch, purch, purchnum, tool,toolquant] = data();
             % Gathers data and stores it into respective arrays.  stud is a
             % N x 2 array where column 1 stores the student name and column
             % 2 stores the school thes student goes to.  men is a N x 2
@@ -37,6 +39,18 @@ classdef toolCheckout < handle
             
             for i = 1:length(sch)
                 obj.Schools{i,1} = School(sch{i,1});
+            end
+            
+            for i = 1:length(purch)
+                obj.Purchasables{i,1} = Purchase(purch{i,1});
+                obj.Purchasables{i,1}.setPrice(purchnum(i,1));
+                obj.Purchasables{i,1}.setQuantity(purchnum(i,2));
+            end
+            
+            for i = 1:length(tool)
+                obj.Tools{i,1} = Tool(tool{i,1});
+                obj.Tools{i,1}.setQuantity(toolquant(i,1));
+                
             end
         end
         
