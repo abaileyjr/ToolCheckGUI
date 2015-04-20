@@ -26,7 +26,6 @@ classdef School < handle
                 end
             end
         end
-    end
-    
+    end    
 end
 
