@@ -1,4 +1,4 @@
-        function [student, mentor, staff, school, purch, tool] = data() 
+        function [student, mentor, staff, school, purch, purchnum, tool, toolquant] = data() 
             staff = {}; %Sheet 1
             mentor = {}; % Sheet 2
             student = {}; % Sheet 3
@@ -12,8 +12,8 @@
             [~, mentor, ~] = xlsread('Database','Mentor');
             [~, student, ~] = xlsread('Database','Student');
             [~, school, ~] = xlsread('Database','School');
-            [~,purch, ~] = xlsread('Database','Purchase');
-            [~,tool,~] = xlsread('Database','Tool');
+            [purchnum,purch, ~] = xlsread('Database','Purchase');
+            [toolquant,tool,~] = xlsread('Database','Tool');
             
             % Reads the database xls file and stores the data in the
             % respective student, ,mentor, staff, school, and purchasabel 
