@@ -7,12 +7,12 @@ classdef Tool < handle
     
     
     methods
-        function obj = Purchase(name)
+        function obj = Tool(name)
             obj.Name = name;
         end
         
-        function obj = setPrice(obj, price)
-            obj.Price = price;
+        function obj = setQuantity(obj, quant)
+            obj.Quantity = quant;
         end
     end
     
