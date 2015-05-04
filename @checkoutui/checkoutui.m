@@ -1,4 +1,4 @@
-function checkoutui()
+function checkoutui(cOut)
 
 mainscreen = figure('Name','Main Screen');
 pos = get(mainscreen,'Position');
@@ -146,6 +146,30 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                     'Units','normalized',...
                                     'Position',[.05,.125,.2,.2],...
                                     'Callback',{@toolCheckIn_callback});
+                                
+           % Start Sam's code ######################
+        
+        statText = get(statusPopup,'String'); % might change
+        nameText = get(personEdit,'String');
+        
+        if strcmp(statText(1),'Student')
+            studentArr=cOut.Students;
+            b = false;
+            for i = 1:length(studentArr)
+                if strcmp(nameText,studentArr{i}.Name)
+                    b = true;
+                end
+            end
+            
+            if b
+                % do nothing
+            else
+                errordlg(sprintf('%s does not exist', nameText),'Error')
+            end
+        end
+                 
+        % End Sam's code #######################
+                             
                                 
         function toolCheckIn_callback(obj,eventdata)
             % ADD CODE HERE
