@@ -8,6 +8,7 @@ classdef toolCheckout < handle
         Schools = {};
         Purchasables={};
         Tools = {};
+        Info = {};
     end
     
    
