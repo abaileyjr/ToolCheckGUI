@@ -1,5 +1,6 @@
 function checkoutui(cOut)
-
+toolWasPressed = 0;
+purchaseWasPressed = 0;
 mainscreen = figure('Name','Main Screen');
 pos = get(mainscreen,'Position');
 set(mainscreen,'Position',[pos(1:2),400,400]);
@@ -160,6 +161,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             for i = 1:length(studentArr)
                 if strcmp(nameText,studentArr{i}.Name)
                     b = true;
+                    toolWasPressed = 1;
+                    cOut.Info{1} = studentArr{i}.School;
                 end
             end
             
@@ -174,6 +177,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             for i = 1:length(mentArr)
                 if strcmp(nameText,mentArr{i}.Name)
                     b = true;
+                    toolWasPressed = 1;
+                    cOut.Info{1} = mentArr{i}.School;
                 end
             end
             
@@ -184,7 +189,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
         end
-                 
+        
+        if toolWasPressed
+            tool_schoolText2.String = cOut.Info{1};
+        end
+        
         % End Sam's code #######################
                              
                                 
@@ -284,6 +293,9 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'FontSize',15,...
                                         'Units','normalized',...
                                         'Position',[.125,.66,.75,.1]);
+        if purchaseWasPressed
+            purchase_schoolText2.String = cOut.Info{1};
+        end
         
         % School's remaining PandaPoints
         purchase_pointsText = uicontrol(leftPanel,'Style','text',...
@@ -374,6 +386,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             for i = 1:length(studentArr)
                 if strcmp(nameText,studentArr{i}.Name)
                     b = true;
+                    purchaseWasPressed = 1;
+                    cOut.Info{2} = studentArr{i}.School;
                 end
             end
             
@@ -388,6 +402,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             for i = 1:length(mentArr)
                 if strcmp(nameText,mentArr{i}.Name)
                     b = true;
+                    purchaseWasPressed = 1;
+                    cOut.Info{2} = mentArr{i}.School; 
                 end
             end
             
@@ -397,6 +413,15 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 errordlg(sprintf('%s does not exist', nameText),'Error')
             end
             
+        end
+        
+        if purchaseWasPressed
+            purchase_schoolText2.String = cOut.Info{2};
+            for i = 1:length(cOut.Schools)
+                if strcmp(cOut.Schools{i}.Name,purchase_schoolText2.String)
+                    purchase_pointsText2.String=cOut.Schools{i}.PandaPoints;
+                end
+            end
         end
          
          % #### End Sam's Code 2 ####
