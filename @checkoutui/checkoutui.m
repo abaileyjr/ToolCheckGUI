@@ -398,23 +398,37 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
          % #### End Sam's Code 2 ####
         
         function purchaseUpdate_callback(obj,eventdata)
-           % ADD CODE HERE
+           % Mandy
            item = get(purchase_itemEdit,'String');
            quantity = get(purchase_quantityEdit,'String');
            if ~isempty(item) && ~isempty(quantity)
-               
+               [num,txt,raw] = xlsread('Database.xls','Purchase');
+               for i = 1:length(num)
+                   if strcmp(item,txt(i,1))
+                       cost = cell2mat(raw(i,2))*str2double(quantity);
+                       set(purchase_costEdit,'String',cost);
+                       return;
+                   end
+               end
+               errordlg('Purchasable or Quantity does not exist.','Error');
            else
                errordlg('You need to fill out both Purchasable and Quantity Fields','Error');
            end
         end
                                     
         function purchaseReturn_callback(obj,eventdata)
-            % ADD CODE HERE
+            % Mandy
             item = get(purchase_itemEdit,'String');
             quantity = get(purchase_quantityEdit,'String');
             cost = get(purchase_costEdit,'String');
             if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
-                
+                [num,txt,raw] = xlsread('Database.xls','Purchase');
+                for i = 1:length(num)
+                    if strcmp(item,txt(i,1))
+                        % ADD CODE HERE
+                    end
+                end
+
             else
                 errordlg('You need to fill out and update all the fields','Error');
             end
