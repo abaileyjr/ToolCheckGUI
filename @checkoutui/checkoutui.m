@@ -359,6 +359,43 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'Units','normalized',...
                                         'Position',[.25,.075,.2,.15],...
                                         'Callback',{@purchaseBuy_callback});
+                                    
+         % #### Start Sam's Code 2 ####
+        statText = get(statusPopup,'Value');
+        nameText = get(personEdit,'String');
+        
+        if statText==1
+            studentArr=cOut.Students;
+            b = false;
+            for i = 1:length(studentArr)
+                if strcmp(nameText,studentArr{i}.Name)
+                    b = true;
+                end
+            end
+            
+            if b
+                % do nothing
+            else
+                errordlg(sprintf('%s does not exist', nameText),'Error')
+            end
+        elseif statText==2
+            mentArr=cOut.Mentors;
+            b = false;
+            for i = 1:length(mentArr)
+                if strcmp(nameText,mentArr{i}.Name)
+                    b = true;
+                end
+            end
+            
+            if b
+                % do nothing
+            else
+                errordlg(sprintf('%s does not exist', nameText),'Error')
+            end
+            
+        end
+         
+         % #### End Sam's Code 2 ####
         
         function purchaseUpdate_callback(obj,eventdata)
            % ADD CODE HERE
