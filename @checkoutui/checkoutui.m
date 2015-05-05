@@ -454,21 +454,41 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
                                     
         function purchaseReturn_callback(obj,eventdata)
-            % Mandy
-            item = get(purchase_itemEdit,'String');
-            quantity = get(purchase_quantityEdit,'String');
-            cost = get(purchase_costText2,'String');
-            if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
-                [num,txt,raw] = xlsread('Database.xlsx','Purchase');
-                for i = 1:length(num)
-                    if strcmp(item,txt(i,1))
-                        % ADD CODE HERE
+            % Written by Mandy Chen
+            purchasable = get(purchase_itemEdit,'String');
+            quantity = str2double(get(purchase_quantityEdit,'String'));
+            cost = str2double(get(purchase_costText2,'String'));
+            purchArr = cOut.Purchasables;
+            points = str2double(get(purchase_pointsText2,'String'));
+            schoolArr = cOut.Schools;
+            staff = get(purchase_staffEdit,'String');
+            staffArr = cOut.Staffs;
+            for v = 1:length(staffArr)
+                if strcmp(staff,staffArr{v}.Name)
+                    if ~isempty(purchasable) && ~isempty(quantity) && ~isempty(cost)
+                        for p = 1:length(purchArr)
+                            if strcmp(purchasable,purchArr{p}.Name)
+                                quant = purchArr{p}.Quantity;
+                                purchArr{p}.Quantity = quant + quantity;
+                                xlswrite('Database.xlsx',purchArr{p}.Quantity,'Purchase',sprintf('C%d',p));
+                                updatePoints = points + cost;
+                                for n=1:length(cOut.Schools)
+                                    if strcmp(cOut.Schools{n}.Name,get(purchase_schoolText2,'String'))
+                                        schoolArr{n}.PandaPoints = updatePoints;
+                                        xlswrite('Database.xlsx',updatePoints,'School',sprintf('B%d',n));
+                                        set(purchase_pointsText2,'String',updatePoints);
+                                        msgbox('Return has been completed!')
+                                        return;
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        errordlg('You need to fill out and update all the fields','Error');
                     end
                 end
-
-            else
-                errordlg('You need to fill out and update all the fields','Error');
             end
+            errordlg('Input existing staff.')
         end
         
         function purchaseBuy_callback(obj,eventdata)
