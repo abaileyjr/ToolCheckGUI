@@ -244,8 +244,14 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
         
         function toolBack_callback(obj,eventdata)
-            close(mainscreen);
-            checkoutui();
+            set(leftPanel,'Visible','off');
+            set(rightPanel,'Visible','off');
+            set(bottomlPanel,'Visible','off');
+            set(bottomrPanel,'Visible','off');
+            set(addPanel,'Visible','on');
+            set(toolpurchPanel,'Visible','on');
+            set(orText,'Visible','on');
+            set(mainscreen,'Position',[pos(1:2),400,400]);
         end
 
     end
@@ -476,8 +482,14 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
                                     
         function purchaseBack_callback(obj,eventdata)
-            close(mainscreen);
-            checkoutui();
+            set(leftPanel,'Visible','off');
+            set(rightPanel,'Visible','off');
+            set(bottomlPanel,'Visible','off');
+            set(bottomrPanel,'Visible','off');
+            set(addPanel,'Visible','on');
+            set(toolpurchPanel,'Visible','on');
+            set(orText,'Visible','on');
+            set(mainscreen,'Position',[pos(1:2),400,400]);
         end
         
     end
