@@ -470,7 +470,27 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             
             % Add button callback
             function personAdd_callback(obj,eventdata)
-                % ADD CODE HERE
+                StatusValue=get(person_statusPopup,'Value');
+                NameString=get(person_nameEdit,'String');
+                SchoolString=get(person_schoolEdit,'String');
+                
+                if StatusValue==4
+                    [~,txt,~]=xlsread('Database.xlsx','Staff','A:A');
+                    L=length(txt);
+                    A=sprintf('A%d',L+1);
+                    xlswrite('Database.xlsx',{NameString},'Staff',A);
+                elseif StatusValue==2
+                    [~,txt,~]=xlsread('Database.xlsx','Mentor','A:A');
+                    L=length(txt);
+                    A=sprintf('A%d:B%d',L+1,L+1);
+                    xlswrite('Database.xlsx',{NameString,SchoolString},'Mentor',A);
+                elseif StatusValue==1
+                    [~,txt,~]=xlsread('Database.xlsx','Student','A:A');
+                    L=length(txt);
+                    A=sprintf('A%d:B%d',L+1,L+1);
+                    xlswrite('Database.xlsx',{NameString,SchoolString},'Student',A);
+                end
+                msgbox(sprintf('Success! %s has been added!',NameString));
             end
         end
         
