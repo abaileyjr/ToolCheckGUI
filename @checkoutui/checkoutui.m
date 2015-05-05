@@ -511,10 +511,12 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                             % school
                                             if pp >= cost
                                                 schoolArray{k}.PandaPoints = schoolArray{k}.PandaPoints - cost;
+                                                purchase_pointsText2.String = schoolArray{k}.PandaPoints;
                                                 A = sprintf('B%d', k);
                                                 xlswrite('Database.xlsx', schoolArray{k}.PandaPoints, 'School', A);
                                                 purchaseArray{j}.Quantity = purchaseArray{j}.Quantity - quantity;
                                                 A = sprintf('C%d', j);
+                                                
                                                 xlswrite('Database.xlsx', purchaseArray{j}.Quantity, 'Purchase', A);
                                                 msgbox('Item has been purchased!');
                                             else
