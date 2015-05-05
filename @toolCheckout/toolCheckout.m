@@ -51,7 +51,8 @@ classdef toolCheckout < handle
                 obj.Tools{i,1} = Tool(tool{i,1});
                 obj.Tools{i,1}.setQuantity(toolquant(i,1));
                 
-            end
+            end         
+            checkoutui(obj);
         end
         
     end
