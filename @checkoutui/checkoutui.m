@@ -406,7 +406,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
            item = get(purchase_itemEdit,'String');
            quantity = get(purchase_quantityEdit,'String');
            if ~isempty(item) && ~isempty(quantity)
-               [num,txt,raw] = xlsread('Database.xls','Purchase');
+               [num,txt,raw] = xlsread('Database.xlsx','Purchase');
                for i = 1:length(num)
                    if strcmp(item,txt(i,1))
                        cost = cell2mat(raw(i,2))*str2double(quantity);
@@ -426,7 +426,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             quantity = get(purchase_quantityEdit,'String');
             cost = get(purchase_costText2,'String');
             if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
-                [num,txt,raw] = xlsread('Database.xls','Purchase');
+                [num,txt,raw] = xlsread('Database.xlsx','Purchase');
                 for i = 1:length(num)
                     if strcmp(item,txt(i,1))
                         % ADD CODE HERE
@@ -568,24 +568,27 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 SchoolString=get(person_schoolEdit,'String');
                 
                 if StatusValue==4
-                    [~,txt,~]=xlsread('Database.xlsx','Staff','A:A');
-                    L=length(txt);
+                    L=length(cOut.Staffs);
                     A=sprintf('A%d',L+1);
                     xlswrite('Database.xlsx',{NameString},'Staff',A);
+                    cOut.Staffs{end+1}=Staff(NameString);
+                    cOut.Staffs{end}.setStatus('Staff');
                 elseif StatusValue==2
-                    [~,txt,~]=xlsread('Database.xlsx','Mentor','A:A');
-                    L=length(txt);
+                    L=length(cOut.Mentors);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Mentor',A);
+                    cOut.Mentors{end+1}=Mentor(NameString);
+                    cOut.Mentors{end}.setSchool(SchoolString);
+                    cOut.Mentors{end}.setStatus('Mentor');
                 elseif StatusValue==1
-                    [~,txt,~]=xlsread('Database.xlsx','Student','A:A');
-                    L=length(txt);
+                    L=length(cOut.Students);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Student',A);
+                    cOut.Students{end+1}=Student(NameString);
+                    cOut.Students{end}.setSchool(SchoolString);
+                    cOut.Students{end}.setStatus('Student');
                 end
                 msgbox(sprintf('Success! %s has been added!',NameString));
-                close all
-                t=toolCheckout();
             end
         end
         
