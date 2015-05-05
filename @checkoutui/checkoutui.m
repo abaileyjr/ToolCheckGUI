@@ -491,6 +491,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Student',A);
                 end
                 msgbox(sprintf('Success! %s has been added!',NameString));
+                close all
                 t=toolCheckout();
             end
         end
