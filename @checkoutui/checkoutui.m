@@ -188,11 +188,49 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                              
                                 
         function toolCheckIn_callback(obj,eventdata)
-            % ADD CODE HERE
+            % Written by Alice Chow
+            tool = get(tool_Edit, 'String');
+            quantity = str2num(get(tool_quantityEdit, 'String'));
+            toolArr = cOut.Tools;
+            b = false;
+            for i = 1:length(toolArr)
+                x = strcmp(tool, toolArr{i}.Name);
+                if x
+                    b = true;
+                    toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
+                    A = sprintf('B%d', i);
+                    xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                end
+            end
+            if ~b
+                errordlg(sprintf('%s does not exist!', tool), 'Error');
+            end
         end
         
         function toolCheckOut_callback(obj,eventdata)
-            % ADD CODE HERE
+            % Written by Alice Chow
+            tool = get(tool_Edit, 'String');
+            quantity = str2num(get(tool_quantityEdit, 'String'));
+            toolArr = cOut.Tools;
+            b = false;
+            for i = 1:length(toolArr)
+                x = strcmp(tool, toolArr{i}.Name);
+                if x
+                    b = true;
+                    if (toolArr{i}.Quantity >= quantity &&...
+                        toolArr{i}.Quantity > 0)
+                        toolArr{i}.Quantity = toolArr{i}.Quantity - quantity;
+                        A = sprintf('B%d', i);
+                        xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                    else
+                        errordlg('There are not enough of this tool.  Please enter a smaller quantity',...
+                            'Error');
+                    end
+                end
+            end
+            if ~b
+                errordlg(sprintf('%s does not exist!', tool), 'Error');
+            end
         end
         
         function toolBack_callback(obj,eventdata)
