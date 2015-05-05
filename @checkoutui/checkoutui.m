@@ -149,10 +149,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                 
            % Start Sam's code ######################
         
-        statText = get(statusPopup,'String'); % might change
+        %statText = get(statusPopup,'String'); % might change
+        statText = get(statusPopup,'Value');
         nameText = get(personEdit,'String');
         
-        if strcmp(statText(1),'Student')
+        if statText==1
             studentArr=cOut.Students;
             b = false;
             for i = 1:length(studentArr)
@@ -166,6 +167,21 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             else
                 errordlg(sprintf('%s does not exist', nameText),'Error')
             end
+        elseif statText==2
+            mentArr=cOut.Mentors;
+            b = false;
+            for i = 1:length(mentArr)
+                if strcmp(nameText,mentArr{i}.Name)
+                    b = true;
+                end
+            end
+            
+            if b
+                % do nothing
+            else
+                errordlg(sprintf('%s does not exist', nameText),'Error')
+            end
+            
         end
                  
         % End Sam's code #######################
@@ -260,15 +276,24 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'Position',[.1,.65,.3,.1]);
                                     
         % Quantity to be purchased/returned
+% Quantity to be purchased/returned
         purchase_quantityText = uicontrol(rightPanel,'Style','text',...
                                         'String','Quantity',...
                                         'FontSize',12,...
                                         'Units','normalized',...
-                                        'Position',[0,.525,.5,.1]);
+                                        'Position',[0,.525,.335,.1]);
         purchase_quantityEdit = uicontrol(rightPanel,'Style','edit',...
                                         'FontSize',15,...
                                         'Units','normalized',...
-                                        'Position',[.1,.475,.3,.1]);
+                                        'Position',[.1,.475,.135,.1]);
+                                    
+        % Update button
+        purchase_updateButton = uicontrol(rightPanel,'Style','pushbutton',...
+                                        'String','Update',...
+                                        'FontSize',15,...
+                                        'Units','normalized',...
+                                        'Position',[.26,.475,.135,.125],...
+                                        'Callback',@purchaseUpdate_callback);
                                     
         % Cost of purchase
         purchase_costText = uicontrol(rightPanel,'Style','text',...
@@ -296,13 +321,40 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'Units','normalized',...
                                         'Position',[.25,.075,.2,.15],...
                                         'Callback',{@purchaseBuy_callback});
+        
+        function purchaseUpdate_callback(obj,eventdata)
+           % ADD CODE HERE
+           item = get(purchase_itemEdit,'String');
+           quantity = get(purchase_quantityEdit,'String');
+           if ~isempty(item) && ~isempty(quantity)
+               
+           else
+               errordlg('You need to fill out both Purchasable and Quantity Fields','Error');
+           end
+        end
                                     
         function purchaseReturn_callback(obj,eventdata)
             % ADD CODE HERE
+            item = get(purchase_itemEdit,'String');
+            quantity = get(purchase_quantityEdit,'String');
+            cost = get(purchase_costEdit,'String');
+            if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
+                
+            else
+                errordlg('You need to fill out and update all the fields','Error');
+            end
         end
         
         function purchaseBuy_callback(obj,eventdata)
             % ADD CODE HERE
+            item = get(purchase_itemEdit,'String');
+            quantity = get(purchase_quantityEdit,'String');
+            cost = get(purchase_costEdit,'String');
+            if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
+                
+            else
+                errordlg('You need to fill out and update all the fields','Error');
+            end
         end
                                     
         function purchaseBack_callback(obj,eventdata)
