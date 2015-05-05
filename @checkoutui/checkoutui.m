@@ -1,3 +1,82 @@
+
+Conversation opened. 7 messages. 2 messages unread.
+
+Skip to content
+Using Gmail with screen readers
+Try now
+Unable to reach Gmail. Please check your internet connection or company's network settings. Help
+ 
+ 
+More 
+1 of 9,707
+ 
+E177 Code
+Inbox
+	x
+Mandy Chen	
+	Attachments3:36 PM (22 hours ago)
+3 older messages
+Mandy Chen	
+% Quantity to be purchased/returned purchase_quantityText = uicontrol(rightPa...
+	5:20 PM (20 hours ago)
+Mandy Chen <akuma_soul@berkeley.edu>
+	
+1:36 PM (27 minutes ago)
+		
+to ANTHONY, Samuel, Alice
+        function purchaseUpdate_callback(obj,eventdata)
+           % ADD CODE HERE
+           item = get(purchase_itemEdit,'String');
+           quantity = get(purchase_quantityEdit,'String');
+           if ~isempty(item) && ~isempty(quantity)
+               [num,txt,raw] = xlsread('Database.xls','Purchase');
+               for i = 1:length(num)
+                   if strcmp(item,txt(i,1))
+                       cost = cell2mat(raw(i,2))*str2double(quantity);
+                       set(purchase_costEdit,'String',cost);
+                       return;
+                   end
+               end
+               errordlg('Purchasable or Quantity does not exist.','Error');
+           else
+               errordlg('You need to fill out both Purchasable and Quantity Fields','Error');
+           end
+        end
+                                    
+        function purchaseReturn_callback(obj,eventdata)
+            % ADD CODE HERE
+            item = get(purchase_itemEdit,'String');
+            quantity = get(purchase_quantityEdit,'String');
+            cost = get(purchase_costEdit,'String');
+            if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
+                [num,txt,raw] = xlsread('Database.xls','Purchase');
+                for i = 1:length(num)
+                    if strcmp(item,txt(i,1))
+                        
+                    end
+                end
+Mandy Chen <akuma_soul@berkeley.edu>
+	
+Attachments2:01 PM (2 minutes ago)
+		
+to ANTHONY, Samuel, Alice
+Attachments area
+Preview attachment checkoutui.m
+[Text]
+	
+Click here to Reply, Reply to all, or Forward
+3.67 GB (24%) of 15 GB used
+Manage
+Terms - Privacy
+Last account activity: 1 hour ago
+Details
+	
+	
+People (3)
+	Mandy Chen
+Show details
+checkoutui.m
+
 function checkoutui(cOut)
 
 mainscreen = figure('Name','Main Screen');
@@ -96,10 +175,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                     'FontSize',15,...
                                     'Units','normalized',...
                                     'Position',[.125,.7,.75,.1]);
-        tool_schoolEdit = uicontrol(leftPanel,'Style','edit',...
+        tool_schoolText2 = uicontrol(leftPanel,'Style','text',...
+                                    'String','N/A',...
                                     'FontSize',15,...
                                     'Units','normalized',...
-                                    'Position',[.125,.625,.75,.1]);
+                                    'Position',[.125,.61,.75,.1]);
                                 
         % Tools already checked out
         tool_checkedoutText = uicontrol(leftPanel,'Style','text',...
@@ -278,10 +358,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'FontSize',12,...
                                         'Units','normalized',...
                                         'Position',[.125,.725,.75,.1]);
-        purchase_schoolEdit = uicontrol(leftPanel,'Style','edit',...
+        purchase_schoolText2 = uicontrol(leftPanel,'Style','text',...
+                                        'String','N/A',...
                                         'FontSize',15,...
                                         'Units','normalized',...
-                                        'Position',[.125,.675,.75,.1]);
+                                        'Position',[.125,.66,.75,.1]);
         
         % School's remaining PandaPoints
         purchase_pointsText = uicontrol(leftPanel,'Style','text',...
@@ -289,10 +370,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'FontSize',12,...
                                         'Units','normalized',...
                                         'Position',[.125,.55,.75,.1]);
-        purchase_pointsEdit = uicontrol(leftPanel,'Style','edit',...
+        purchase_pointsText2 = uicontrol(leftPanel,'Style','Text',...
+                                        'String','N/A',...
                                         'FontSize',15,...
                                         'Units','normalized',...
-                                        'Position',[.125,.5,.75,.1]);
+                                        'Position',[.125,.485,.75,.1]);
         
         % Past purchases
         purchase_purchasesText = uicontrol(leftPanel,'Style','text',...
@@ -339,10 +421,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'FontSize',12,...
                                         'Units','normalized',...
                                         'Position',[0,.35,.5,.1]);
-        purchase_costEdit = uicontrol(rightPanel,'Style','edit',...
+        purchase_costText2 = uicontrol(rightPanel,'Style','text',...
+                                        'String','N/A',...
                                         'FontSize',15,...
                                         'Units','normalized',...
-                                        'Position',[.1,.3,.3,.1]);
+                                        'Position',[.1,.285,.3,.1]);
                                     
         % Return button
         purchase_returnButton = uicontrol(rightPanel,'Style','pushbutton',...
@@ -406,7 +489,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                for i = 1:length(num)
                    if strcmp(item,txt(i,1))
                        cost = cell2mat(raw(i,2))*str2double(quantity);
-                       set(purchase_costEdit,'String',cost);
+                       set(purchase_costText2,'String',cost);
                        return;
                    end
                end
@@ -420,7 +503,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             % Mandy
             item = get(purchase_itemEdit,'String');
             quantity = get(purchase_quantityEdit,'String');
-            cost = get(purchase_costEdit,'String');
+            cost = get(purchase_costText2,'String');
             if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
                 [num,txt,raw] = xlsread('Database.xls','Purchase');
                 for i = 1:length(num)
@@ -438,7 +521,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             % ADD CODE HERE
             item = get(purchase_itemEdit,'String');
             quantity = get(purchase_quantityEdit,'String');
-            cost = get(purchase_costEdit,'String');
+            cost = get(purchase_costText2,'String');
             if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
                 
             else
@@ -719,3 +802,5 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
     end
 end
+
+Displaying checkoutui.m.
