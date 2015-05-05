@@ -210,6 +210,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                     toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
                     A = sprintf('B%d', i);
                     xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                    msgbox('Tool has been checked in!');
                 end
             end
             if ~b
@@ -232,6 +233,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                         toolArr{i}.Quantity = toolArr{i}.Quantity - quantity;
                         A = sprintf('B%d', i);
                         xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                        msgbox('Tool has been checked out!');
                     else
                         errordlg('There are not enough of this tool.  Please enter a smaller quantity',...
                             'Error');
@@ -470,14 +472,72 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
         
         function purchaseBuy_callback(obj,eventdata)
-            % ADD CODE HERE
-            item = get(purchase_itemEdit,'String');
-            quantity = get(purchase_quantityEdit,'String');
-            cost = get(purchase_costText2,'String');
-            if ~isempty(item) && ~isempty(quantity) && ~isempty(cost)
-                
+            % Written by Alice Chow
+            staff = get(purchase_staffEdit, 'String');
+            if isempty(staff)
+                % no staff name was inputted
+                errordlg('Please enter a staff name.', 'Error');
             else
-                errordlg('You need to fill out and update all the fields','Error');
+                staffArray = cOut.Staffs;
+                a = false; % staff existance
+                for i = 1:length(staffArray)
+                    % finding the staff member
+                    x = strcmp(staff, staffArray{i}.Name);
+                    if x
+                        % staff member exists
+                        a = true;
+                        item = get(purchase_itemEdit, 'String');
+                        quantity = str2num(get(purchase_quantityEdit, 'String'));
+                        cost = str2num(get(purchase_costText2, 'String'));
+                        school = get(purchase_schoolText2, 'String');
+                        pp = str2num(get(purchase_pointsText2, 'String'));
+                        purchaseArray = cOut.Purchasables;
+                        schoolArray = cOut.Schools;
+                        b = false; % item existance
+                        for j = 1:length(purchaseArray)
+                            % loop to correct purchase item
+                            y = strcmp(item, purchaseArray{j}.Name);
+                            if y
+                                % item exists
+                                b = true;
+                                if (purchaseArray{j}.Quantity >= quantity && ...
+                                        purchaseArray{j}.Quantity > 0)
+                                    % there is enough of the item
+                                    for k = 1:length(schoolArray)
+                                        % loop to correct school
+                                        z = strcmp(school, schoolArray{k}.Name);
+                                        if z
+                                            % current k is the correct
+                                            % school
+                                            if pp >= cost
+                                                schoolArray{k}.PandaPoints = schoolArray{k}.PandaPoints - cost;
+                                                A = sprintf('B%d', k);
+                                                xlswrite('Database.xlsx', schoolArray{k}.PandaPoints, 'School', A);
+                                                purchaseArray{j}.Quantity = purchaseArray{j}.Quantity - quantity;
+                                                A = sprintf('C%d', j);
+                                                xlswrite('Database.xlsx', purchaseArray{j}.Quantity, 'Purchase', A);
+                                                msgbox('Item has been purchased!');
+                                            else
+                                                errordlg(sprintf('%s does not have enough Panda Points for this purchase.', school), 'Error');
+                                            end
+                                        end
+                                    end
+                                else
+                                    errordlg('There is not enough of this object.  Please enter a smaller quantity.', 'Error');
+                                end
+                            end
+                        end
+                        if ~b
+                            % item does not exist
+                            errordlg(sprintf('%s does not exist!', item), 'Error');
+                        end
+                    end
+                    
+                end
+                if ~a
+                    % not a staff
+                    errordlg(sprintf('%s is not a staff member.', staff), 'Error');
+                end
             end
         end
                                     
