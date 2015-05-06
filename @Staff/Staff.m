@@ -14,6 +14,7 @@ classdef Staff < Person
         function obj = Staff(name)
             obj = obj@Person(name);
             obj.CanPurchase = 1;
+            obj.Status='Staff';
         end
         
     end

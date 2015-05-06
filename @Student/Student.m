@@ -16,22 +16,19 @@ classdef Student < Person
     
     properties
         School;
-        Mentors;
     end
     
     methods
         function obj = Student(name)
             obj = obj@Person(name);
             obj.CanPurchase = 0;
+            obj.Status='Student';
         end
         
         function obj = setSchool(obj, name)
             obj.School = name;
         end
-        
-        function obj = setMentors(obj, mentors)
-            obj.Mentors = mentors;
-        end
+         
     end
     
 end

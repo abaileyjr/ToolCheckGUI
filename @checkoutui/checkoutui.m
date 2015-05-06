@@ -708,12 +708,24 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 SchoolString=get(person_schoolEdit,'String');
                 
                 if StatusValue==3
+                    for j=1:length(cOut.Staffs)
+                        if strcmp(cOut.Staffs{j}.Name,NameString)
+                           errordlg('This Staff member already exists!')
+                           return
+                        end
+                    end
                     L=length(cOut.Staffs);
                     A=sprintf('A%d',L+1);
                     xlswrite('Database.xlsx',{NameString},'Staff',A);
                     cOut.Staffs{end+1}=Staff(NameString);
                     cOut.Staffs{end}.setStatus('Staff');
                 elseif StatusValue==2
+                    for j=1:length(cOut.Mentors)
+                        if strcmp(cOut.Mentors{j}.Name,NameString)
+                           errordlg('This Mentor already exists!')
+                           return
+                        end
+                    end
                     L=length(cOut.Mentors);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Mentor',A);
@@ -721,6 +733,12 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                     cOut.Mentors{end}.setSchool(SchoolString);
                     cOut.Mentors{end}.setStatus('Mentor');
                 elseif StatusValue==1
+                    for j=1:length(cOut.Students)
+                        if strcmp(cOut.Students{j}.Name,NameString)
+                           errordlg('This Student already exists!')
+                           return
+                        end
+                    end
                     L=length(cOut.Students);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Student',A);
@@ -790,6 +808,12 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             function toolAdd_callback(obj,eventdata)
                 ToolName=get(tool_nameEdit,'String');
                 ToolQuant=str2double(get(tool_quantEdit,'String'));
+                for j=1:length(cOut.Tools)
+                    if strcmp(cOut.Tools{j}.Name,ToolName)
+                        errordlg('This Tool already exists!')
+                        return
+                    end
+                end
                 L=length(cOut.Tools);
                 A=sprintf('A%d:B%d',L+1,L+1);
                 xlswrite('Database.xlsx',{ToolName,ToolQuant},'Tool',A);
@@ -869,6 +893,12 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                PurchName=get(purchase_nameEdit,'String');
                PurchQuant=str2double(get(purchase_quantEdit,'String'));
                PurchCost=str2double(get(purchase_pointsEdit,'String'));
+               for j=1:length(cOut.Purchasables)
+                    if strcmp(cOut.Purchasables{j}.Name,PurchName)
+                        errordlg('This Purchasable already exists!')
+                        return
+                    end
+                end
                L=length(cOut.Purchasables);
                A=sprintf('A%d:C%d',L+1,L+1);
                xlswrite('Database.xlsx',{PurchName,PurchCost,PurchQuant},'Purchase',A);

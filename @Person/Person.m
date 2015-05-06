@@ -14,7 +14,6 @@ classdef Person < handle
     
     properties
         Name;
-        ID;
         Status;
         CanPurchase;
     end
@@ -22,10 +21,6 @@ classdef Person < handle
     methods
         function obj = Person(name)
             obj.Name = name;
-        end
-        
-        function obj = setID(obj, id)
-            obj.ID = id;
         end
         
         function obj = setStatus(obj, status)
