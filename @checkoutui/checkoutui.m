@@ -71,11 +71,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         if statText==1
             studentArr=cOut.Students;
             b = false;
-            for i = 1:length(studentArr)
-                if strcmp(nameText,studentArr{i}.Name)
+            for l = 1:length(studentArr)
+                if strcmp(nameText,studentArr{l}.Name)
                     b = true;
                     toolWasPressed = 1;
-                    cOut.Info{1} = studentArr{i}.School;
+                    cOut.Info{1} = studentArr{l}.School;
                 end
             end
             
@@ -88,11 +88,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         elseif statText==2
             mentArr=cOut.Mentors;
             b = false;
-            for i = 1:length(mentArr)
-                if strcmp(nameText,mentArr{i}.Name)
+            for l = 1:length(mentArr)
+                if strcmp(nameText,mentArr{l}.Name)
                     b = true;
                     toolWasPressed = 1;
-                    cOut.Info{1} = mentArr{i}.School;
+                    cOut.Info{1} = mentArr{l}.School;
                 end
             end
             
@@ -104,11 +104,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
         end
-        
-        if toolWasPressed
-            tool_schoolText2.String = cOut.Info{1};
-        end
-        
+       
+               
         % End Sam's code #######################
         if k~=1;
             set(addPanel,'Visible','off');
@@ -153,6 +150,10 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'Units','normalized',...
                                         'Position',[.125,.61,.75,.1]);
 
+            if toolWasPressed
+                tool_schoolText2.String = cOut.Info{1};
+            end
+            
             % Tools already checked out
             tool_checkedoutText = uicontrol(leftPanel,'Style','text',...
                                         'String','Tools Checked Out',...
@@ -216,7 +217,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                     toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
                     A = sprintf('B%d', i);
                     xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
-                    tool_checkedoutTable.Data{end+1,1}=sprintf('%s has returned %d of %s',nameText,quantity,tool);
+                    logtext=sprintf('%s has returned %d of %s',nameText,quantity,tool);
+                    tool_checkedoutTable.Data{end+1,1}=logtext;
+                    [~,txt,~]=xlsread('Database.xlsx','Tool Log','A:A');
+                    L=length(txt)+1;
+                    xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Tool Log',sprintf('A%d:B%d',L,L));
                     msgbox('Tool has been checked in!');
                 end
             end
@@ -240,7 +245,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                         toolArr{i}.Quantity = toolArr{i}.Quantity - quantity;
                         A = sprintf('B%d', i);
                         xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
-                        tool_checkedoutTable.Data{end+1,1}=sprintf('%s has checked out %d of %s',nameText,quantity,tool);
+                        logtext=sprintf('%s has checked out %d of %s',nameText,quantity,tool);
+                        tool_checkedoutTable.Data{end+1,1}=logtext;
+                        [~,txt,~]=xlsread('Database.xlsx','Tool Log','A:A');
+                        L=length(txt)+1;
+                        xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Tool Log',sprintf('A%d:B%d',L,L));
                         msgbox('Tool has been checked out!');
                     else
                         errordlg('There are not enough of this tool.  Please enter a smaller quantity',...
@@ -269,18 +278,18 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
     % Callback for the Purchase button
     function purchase_callback(obj,eventdata)
        
-          % #### Start Sam's Code 2 ####
+        % #### Start Sam's Code 2 ####
         statText = get(statusPopup,'Value');
         nameText = get(personEdit,'String');
         
         if statText==1
             studentArr=cOut.Students;
             b = false;
-            for i = 1:length(studentArr)
-                if strcmp(nameText,studentArr{i}.Name)
+            for l = 1:length(studentArr)
+                if strcmp(nameText,studentArr{l}.Name)
                     b = true;
                     purchaseWasPressed = 1;
-                    cOut.Info{2} = studentArr{i}.School;
+                    cOut.Info{2} = studentArr{l}.School;
                 end
             end
             
@@ -293,11 +302,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         elseif statText==2
             mentArr=cOut.Mentors;
             b = false;
-            for i = 1:length(mentArr)
-                if strcmp(nameText,mentArr{i}.Name)
+            for l = 1:length(mentArr)
+                if strcmp(nameText,mentArr{l}.Name)
                     b = true;
                     purchaseWasPressed = 1;
-                    cOut.Info{2} = mentArr{i}.School; 
+                    cOut.Info{2} = mentArr{l}.School; 
                 end
             end
             
@@ -309,16 +318,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
         end
-        
-        if purchaseWasPressed
-            purchase_schoolText2.String = cOut.Info{2};
-            for i = 1:length(cOut.Schools)
-                if strcmp(cOut.Schools{i}.Name,purchase_schoolText2.String)
-                    purchase_pointsText2.String=cOut.Schools{i}.PandaPoints;
-                end
-            end
-        end
-         
+                        
          % #### End Sam's Code 2 ####
         
         if kk~=1            
@@ -378,6 +378,16 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                             'FontSize',15,...
                                             'Units','normalized',...
                                             'Position',[.125,.485,.75,.1]);
+            
+            if purchaseWasPressed
+                purchase_schoolText2.String = cOut.Info{2};
+                for l = 1:length(cOut.Schools)
+                    if strcmp(cOut.Schools{l}.Name,purchase_schoolText2.String)
+                        purchase_pointsText2.String=cOut.Schools{l}.PandaPoints;
+                    end
+                end
+            end
+            
 
             % Past purchases
             purchase_purchasesText = uicontrol(leftPanel,'Style','text',...
@@ -495,7 +505,11 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         schoolArr{n}.PandaPoints = updatePoints;
                                         xlswrite('Database.xlsx',updatePoints,'School',sprintf('B%d',n));
                                         set(purchase_pointsText2,'String',updatePoints);
-                                        purchase_purchasesTable.Data{end+1,1}=sprintf('%s has returned %d of %s',nameText,quantity,purchasable);
+                                        logtext=sprintf('%s has returned %d of %s',nameText,quantity,purchasable);
+                                        purchase_purchasesTable.Data{end+1,1}=logtext;
+                                        [~,txt,~]=xlsread('Database.xlsx','Purchase Log','A:A');
+                                        L=length(txt)+1;
+                                        xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Purchase Log',sprintf('A%d:B%d',L,L));
                                         msgbox('Return has been completed!')
                                         return;
                                     end
@@ -555,9 +569,12 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                                 xlswrite('Database.xlsx', schoolArray{k}.PandaPoints, 'School', A);
                                                 purchaseArray{j}.Quantity = purchaseArray{j}.Quantity - quantity;
                                                 A = sprintf('C%d', j);
-                                                
                                                 xlswrite('Database.xlsx', purchaseArray{j}.Quantity, 'Purchase', A);
-                                                purchase_purchasesTable.Data{end+1,1}=sprintf('%s has purchased %d of %s',nameText,quantity,item);
+                                                logtext=sprintf('%s has purchased %d of %s',nameText,quantity,item);
+                                                purchase_purchasesTable.Data{end+1,1}=logtext;
+                                                [~,txt,~]=xlsread('Database.xlsx','Purchase Log','A:A');
+                                                L=length(txt)+1;
+                                                xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Purchase Log',sprintf('A%d:B%d',L,L));
                                                 msgbox('Item has been purchased!');
                                             else
                                                 errordlg(sprintf('%s does not have enough Panda Points for this purchase.', school), 'Error');
