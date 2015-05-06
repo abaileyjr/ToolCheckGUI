@@ -111,7 +111,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                     'Position',[.125,.5,.75,.1]);
         % Tool Checkout Log Table
         tool_checkedoutTable = uitable(leftPanel,'Units','normalized',...
-                                    'Position',[.1,.075,.8,.425]);
+                                    'Position',[.1,.075,.8,.425],...
+                                    'ColumnWidth', {245});
         
         % Tool to be checked out/in
         tool_Text = uicontrol(rightPanel,'Style','text',...
@@ -212,6 +213,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                     toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
                     A = sprintf('B%d', i);
                     xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                    tool_checkedoutTable.Data{end+1,1}=sprintf('%s has returned %d of %s',nameText,quantity,tool);
                     msgbox('Tool has been checked in!');
                 end
             end
@@ -235,6 +237,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                         toolArr{i}.Quantity = toolArr{i}.Quantity - quantity;
                         A = sprintf('B%d', i);
                         xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                        tool_checkedoutTable.Data{end+1,1}=sprintf('%s has checked out %d of %s',nameText,quantity,tool);
                         msgbox('Tool has been checked out!');
                     else
                         errordlg('There are not enough of this tool.  Please enter a smaller quantity',...
@@ -327,7 +330,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'Position',[.125,.375,.75,.1]);
         % Purchases log table
         purchase_purchasesTable = uitable(leftPanel,'Units','normalized',...
-                                        'Position',[.1,.075,.8,.325]);
+                                        'Position',[.1,.075,.8,.325],...
+                                        'ColumnWidth', {245});
         
         % Item to be purchased/returned
         purchase_itemText = uicontrol(rightPanel,'Style','text',...
@@ -481,6 +485,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         schoolArr{n}.PandaPoints = updatePoints;
                                         xlswrite('Database.xlsx',updatePoints,'School',sprintf('B%d',n));
                                         set(purchase_pointsText2,'String',updatePoints);
+                                        purchase_purchasesTable.Data{end+1,1}=sprintf('%s has returned %d of %s',nameText,quantity,purchasable);
                                         msgbox('Return has been completed!')
                                         return;
                                     end
@@ -542,6 +547,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                                 A = sprintf('C%d', j);
                                                 
                                                 xlswrite('Database.xlsx', purchaseArray{j}.Quantity, 'Purchase', A);
+                                                purchase_purchasesTable.Data{end+1,1}=sprintf('%s has purchased %d of %s',nameText,quantity,item);
                                                 msgbox('Item has been purchased!');
                                             else
                                                 errordlg(sprintf('%s does not have enough Panda Points for this purchase.', school), 'Error');
@@ -685,7 +691,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
-            % Anthony's Work
+            %%% Anthony's Work %%%%%%%%%%%%%%
             function personAdd_callback(obj,eventdata)
                 StatusValue=get(person_statusPopup,'Value');
                 NameString=get(person_nameEdit,'String');
@@ -714,6 +720,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
                 msgbox(sprintf('Success! %s has been added!',NameString));
             end
+                %%% End of Anthony's Work %%%%%%%%%%%%%%%%
         end
         
         % Callback for the Add Tool button
@@ -769,6 +776,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
+            %%%% Anthony's Work %%%%%%%%%%%%%%%%
             function toolAdd_callback(obj,eventdata)
                 ToolName=get(tool_nameEdit,'String');
                 ToolQuant=str2double(get(tool_quantEdit,'String'));
@@ -779,6 +787,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 cOut.Tools{end}.setQuantity(ToolQuant);
                 msgbox(sprintf('Success! %d %s has been added!',ToolQuant,ToolName));
             end
+            %%%%% End of Anthony's Work %%%%%%%%%%%%%%
         end
         
         % Callback for the Add Purchasable button
@@ -845,6 +854,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
+            %%%% Anthony's Work %%%%%%%%%%%%%
             function purchaseAdd_callback(obj,eventdata)
                PurchName=get(purchase_nameEdit,'String');
                PurchQuant=str2double(get(purchase_quantEdit,'String'));
@@ -857,6 +867,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                cOut.Purchasables{end}.setQuantity(PurchQuant);
                msgbox(sprintf('Success! %d, %s that cost $%3.3g has been added!',PurchQuant,PurchName,PurchCost));
             end
+            %%%% End of Anthony's Work %%%%%%%%%%%%%%%%%
         end
         
         % Callback for the Add Back button
