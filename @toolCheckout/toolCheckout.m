@@ -1,5 +1,26 @@
 classdef toolCheckout < handle
- 
+%TOOLCHECKOUT Creation of a toolCheckout object
+    %   toolCheckout is a subclass of handle.  In addition to
+    %   the handle class properties, each toolCheckout has the following 
+    %   properties:
+    %
+    %   Students - Cell Array that stores Student objects
+    %   Mentors - Cell Array that stores Mentor objects
+    %   Staffs - Cell Array that stores Staff objects
+    %   Schools - Cell Array that stores School objects
+    %   Purchasables - Cell Array that stores Purchase objects
+    %   Tools - Cell Array that stores Tool objects
+    %   Info -  A container for information
+    %
+    %   The constructor calls the data function. A function that scrapes
+    %   the Database sheets for the information in the Student, Staff,
+    %   Mentors, Schools, Tools, and Purchase Sheets. It then uses the
+    %   outputs of the data function to then set the property cell arrays
+    %   with the various objects each cell array needs to hold. Lastly the
+    %   constructor calls the function checkoutui, which opens the GUI for
+    %   the user to interact with.
+    %
+    %   Created by: Sam Fung, 22769356 
     
     properties
         Students = {};

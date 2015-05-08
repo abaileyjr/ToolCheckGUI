@@ -5,12 +5,13 @@ classdef Mentor < Person
     %   a Students property, which defines the School and Students associated
     %   with each individual mentor
     %
-    %   The constructor sets the name of the mentor and the CanPurchase
-    %   property.  Only Staff can purchase.
-    %   The following additional methods set respective properties of the
+    %   The constructor calls the Person superclass constructor, setting 
+    %   the name of the mentor. Then the constructor sets the CanPurchase
+    %   property while also setting Status Property. Only Staff can purchase.
+    %
+    %   The following additional method sets the respective property of the
     %   Mentor.
     %       setSchool(obj, school)
-    %       setStudents(obj, students)
     %
     %   Created by: Alice Chow, 23404699
     
@@ -22,7 +23,7 @@ classdef Mentor < Person
         function obj = Mentor(name)
             obj = obj@Person(name);
             obj.CanPurchase = 0;
-            obj.Status='Mentor';
+            obj.setStatus('Mentor');
         end
         
         function obj = setSchool(obj, name)

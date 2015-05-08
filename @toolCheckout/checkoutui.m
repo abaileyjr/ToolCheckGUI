@@ -1,4 +1,9 @@
 function checkoutui(cOut)
+%CHECKOUTUI This function runes the GUI for the toolCheckout project. This
+%function also directly interfaces with the spradsheet and a toolCheckout
+%object.
+
+%Initializing the Main Page
 toolWasPressed = 0;
 purchaseWasPressed = 0;
 mainscreen = figure('Name','Main Screen');
@@ -12,7 +17,7 @@ orText = uicontrol(mainscreen,'Style','text',...
                         'Units','normalized',...
                         'Position',[.4,.27,.2,.08]);
 
-% The person's status/title: Staff/Student/Mentor/Teacher
+% The person's status/title: Student/Mentor
 statusText = uicontrol(toolpurchPanel,'Style','text',...
                         'FontSize',12,...
                         'String','Status',...
@@ -62,12 +67,14 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
     % Callback for the Tool button
     function tool_callback(obj,eventdata)
         
-        % Start Sam's code ######################
+        %%% Written by Sam Fung %%%
+        % grabs the input data
         
-        %statText = get(statusPopup,'String'); % might change
         statText = get(statusPopup,'Value');
         nameText = get(personEdit,'String');
         
+        %if the input is a student, checks to see if the student exist and
+        %if it exists sets t.info to the school name for later use.
         if statText==1
             studentArr=cOut.Students;
             b = false;
@@ -79,12 +86,18 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
             end
             
+            %If the student exists, b is true, if not b is false. If the
+            %student doesnt exist, an error pops up. It also sets the value
+            %of k. if K is true, when a student doesnt exist, the remaining
+            %code doesnt happen.
             if b
                 k=0;
             else
                 errordlg(sprintf('%s does not exist', nameText),'Error')
                 k=1;
             end
+        %if the input is a mentor, checks to see if the mentor exist and
+        %if it exists sets t.info to the school name for later use.    
         elseif statText==2
             mentArr=cOut.Mentors;
             b = false;
@@ -96,6 +109,10 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
             end
             
+            %If the student exists, b is true, if not b is false. If the
+            %student doesnt exist, an error pops up. It also sets the value
+            %of k. if K is true, when a student doesnt exist, the remaining
+            %code doesnt happen.
             if b
                 k=0;
             else
@@ -104,16 +121,18 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
         end
-       
-               
-        % End Sam's code #######################
+                      
+        %%% End Sam's code %%% 
+        
         if k~=1;
+            %Sets the panels to invisible 
             set(addPanel,'Visible','off');
             set(toolpurchPanel,'Visible','off');
             set(orText,'Visible','off');
             set(mainscreen,'Position',[pos(1:2),700,400]);
             set(mainscreen,'Name','Tool Checkout');
-
+            
+            %makes new panels for the next screens
             leftPanel = uipanel('Parent',mainscreen,'Position',[0,.15,.5,1]);
             rightPanel = uipanel('Parent',mainscreen,'Position',[.5,.15,1,1]);
             bottomlPanel = uipanel('Parent',mainscreen,'Position',[0,0,.5,.15]);
@@ -149,7 +168,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         'FontSize',15,...
                                         'Units','normalized',...
                                         'Position',[.125,.61,.75,.1]);
-
+                                    
+            %Updates the school field in the text box on the new screen                         
             if toolWasPressed
                 tool_schoolText2.String = cOut.Info{1};
             end
@@ -205,20 +225,28 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
 
         function toolCheckIn_callback(obj,eventdata)
-            % Written by Alice Chow
+            %%% Written by Alice Chow %%%
+            %gathers info from the input fields
             tool = get(tool_Edit, 'String');
             quantity = str2num(get(tool_quantityEdit, 'String'));
+            %gets the data from the toolCheckout object.
             toolArr = cOut.Tools;
             b = false;
+            %loop that compares the input tool name to the list of tool
+            %names saved, if not it errors out
             for i = 1:length(toolArr)
                 x = strcmp(tool, toolArr{i}.Name);
                 if x
-                    b = true;
+                    %calculate the new quantity of tools available. and
+                    %writes that value to the Database and toolChecout obj
+                    b = true; 
                     toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
                     A = sprintf('B%d', i);
                     xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
                     logtext=sprintf('%s has returned %d of %s',nameText,quantity,tool);
                     tool_checkedoutTable.Data{end+1,1}=logtext;
+                    %the next three lines keep track of the check out in
+                    %the Tool log.
                     [~,txt,~]=xlsread('Database.xlsx','Tool Log','A:A');
                     L=length(txt)+1;
                     xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Tool Log',sprintf('A%d:B%d',L,L));
@@ -231,15 +259,21 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
         
         function toolCheckOut_callback(obj,eventdata)
-            % Written by Alice Chow
+            %%% Written by Alice Chow %%%
+            %gathers info from the input fields
             tool = get(tool_Edit, 'String');
             quantity = str2num(get(tool_quantityEdit, 'String'));
             toolArr = cOut.Tools;
             b = false;
+            %Checks to see if the Tool name exists, if not, the loop errors
+            %out
             for i = 1:length(toolArr)
                 x = strcmp(tool, toolArr{i}.Name);
                 if x
                     b = true;
+                    %the below does the exact same as for the return button
+                    %previously, but for checking out. So it subtracts
+                    %quantity rather than adding.
                     if (toolArr{i}.Quantity >= quantity &&...
                         toolArr{i}.Quantity > 0)
                         toolArr{i}.Quantity = toolArr{i}.Quantity - quantity;
@@ -262,6 +296,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
         end
         
+        %Call back to set the main screen panels visible.
         function toolBack_callback(obj,eventdata)
             set(leftPanel,'Visible','off');
             set(rightPanel,'Visible','off');
@@ -277,11 +312,13 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
 
     % Callback for the Purchase button
     function purchase_callback(obj,eventdata)
-       
-        % #### Start Sam's Code 2 ####
+        %%% Written by Sam Fung %%%
+        %gathers input data
         statText = get(statusPopup,'Value');
         nameText = get(personEdit,'String');
         
+        %if the status of the person is a student. If so sets b to true and
+        %t.info to the school associated with the student.
         if statText==1
             studentArr=cOut.Students;
             b = false;
@@ -293,12 +330,17 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
             end
             
+            %If the student exists, b is true, if not b is false. If the
+            %student doesnt exist, an error pops up. It also sets the value
+            %of kk. if kk is true, when a student doesnt exist, the remaining
+            %code doesnt happen.
             if b
                 kk=0;
             else
                 errordlg(sprintf('%s does not exist', nameText),'Error')
                 kk=1;
             end
+        %if the status of the input is a mentor    
         elseif statText==2
             mentArr=cOut.Mentors;
             b = false;
@@ -310,6 +352,10 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
             end
             
+            %If the mentor exists, b is true, if not b is false. If the
+            %mentor doesnt exist, an error pops up. It also sets the value
+            %of kk. if kk is true, when a student doesnt exist, the remaining
+            %code doesnt happen.
             if b
                 kk=0;
             else
@@ -319,15 +365,17 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             
         end
                         
-         % #### End Sam's Code 2 ####
+         %%% End of Sam Fung's Code %%%
         
         if kk~=1            
+            %Sets the panels to invisible 
             set(addPanel,'Visible','off');
             set(toolpurchPanel,'Visible','off');
             set(orText,'Visible','off');
             set(mainscreen,'Position',[pos(1:2),700,400]);
             set(mainscreen,'Name','Purchasable Screen');
-
+            
+            %Sets the panels for the Purchase features as visible.
             leftPanel = uipanel('Parent',mainscreen,'Position',[0,.15,.5,1]);
             rightPanel = uipanel('Parent',mainscreen,'Position',[.5,.15,1,1]);
             bottomlPanel = uipanel('Parent',mainscreen,'Position',[0,0,.5,.15]);
@@ -363,6 +411,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                             'FontSize',15,...
                                             'Units','normalized',...
                                             'Position',[.125,.66,.75,.1]);
+                                        
+            %Updates the school field in the text box on the new screen
             if purchaseWasPressed
                 purchase_schoolText2.String = cOut.Info{1};
             end
@@ -378,7 +428,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                             'FontSize',15,...
                                             'Units','normalized',...
                                             'Position',[.125,.485,.75,.1]);
-            
+                                        
+            %Updates the PandaPoints field in the text box on the new screen
             if purchaseWasPressed
                 purchase_schoolText2.String = cOut.Info{2};
                 for l = 1:length(cOut.Schools)
@@ -412,7 +463,6 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                             'Position',[.1,.65,.3,.1]);
 
             % Quantity to be purchased/returned
-    % Quantity to be purchased/returned
             purchase_quantityText = uicontrol(rightPanel,'Style','text',...
                                             'String','Quantity',...
                                             'FontSize',12,...
@@ -463,12 +513,18 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
        
         
         function purchaseUpdate_callback(obj,eventdata)
-           % Mandy
+           %%% Written by Mandy Chen %%%
+           %Update button checks to see if the item exists, and if so it
+           %will display the PandaPoint cost in the text field below.
+           %gets the input information.
            item = get(purchase_itemEdit,'String');
            quantity = get(purchase_quantityEdit,'String');
+           %checks to see if the fields arent empty
            if ~isempty(item) && ~isempty(quantity)
                [num,txt,raw] = xlsread('Database.xlsx','Purchase');
                for i = 1:length(num)
+                   %if the item exists, multiples the item cost by the
+                   %number requested.
                    if strcmp(item,txt(i,1))
                        cost = cell2mat(raw(i,2))*str2double(quantity);
                        set(purchase_costText2,'String',cost);
@@ -482,7 +538,9 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
                                     
         function purchaseReturn_callback(obj,eventdata)
-            % Written by Mandy Chen
+            %%% Written by Mandy Chen %%%
+            %Callback for returning a purchasable
+            %getting data and setting variables.
             purchasable = get(purchase_itemEdit,'String');
             quantity = str2double(get(purchase_quantityEdit,'String'));
             cost = str2double(get(purchase_costText2,'String'));
@@ -491,15 +549,24 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             schoolArr = cOut.Schools;
             staff = get(purchase_staffEdit,'String');
             staffArr = cOut.Staffs;
+            %Checks to see if the Staff exists, then if the input fields
+            %arent empty, and then if the purchasable requested is in the
+            %system.
             for v = 1:length(staffArr)
                 if strcmp(staff,staffArr{v}.Name)
                     if ~isempty(purchasable) && ~isempty(quantity) && ~isempty(cost)
                         for p = 1:length(purchArr)
                             if strcmp(purchasable,purchArr{p}.Name)
+                                %grabs the quantity and sets the new one,
+                                %then writes to the Database.
                                 quant = purchArr{p}.Quantity;
                                 purchArr{p}.Quantity = quant + quantity;
                                 xlswrite('Database.xlsx',purchArr{p}.Quantity,'Purchase',sprintf('C%d',p));
                                 updatePoints = points + cost;
+                                %the following code updates the Points of
+                                %the School, and creates an entry in the
+                                %Purchase Log, as well as displays a
+                                %success message.
                                 for n=1:length(cOut.Schools)
                                     if strcmp(cOut.Schools{n}.Name,get(purchase_schoolText2,'String'))
                                         schoolArr{n}.PandaPoints = updatePoints;
@@ -525,7 +592,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         end
         
         function purchaseBuy_callback(obj,eventdata)
-            % Written by Alice Chow
+            %%% Written by Alice Chow %%%
             staff = get(purchase_staffEdit, 'String');
             if isempty(staff)
                 % no staff name was inputted
@@ -561,7 +628,10 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                                         z = strcmp(school, schoolArray{k}.Name);
                                         if z
                                             % current k is the correct
-                                            % school
+                                            % school purchases the item,
+                                            % records in the Purchase Log
+                                            % and then displays a Sucess
+                                            % message.
                                             if pp >= cost
                                                 schoolArray{k}.PandaPoints = schoolArray{k}.PandaPoints - cost;
                                                 purchase_pointsText2.String = schoolArray{k}.PandaPoints;
@@ -599,7 +669,9 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
             end
         end
-                                    
+        
+        %Callback for going back to the main page, sets the panels to
+        %visible
         function purchaseBack_callback(obj,eventdata)
             set(leftPanel,'Visible','off');
             set(rightPanel,'Visible','off');
@@ -615,6 +687,8 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
 
     % Callback for the Add button
     function add_callback(obj,eventdata)
+        %sets the size and position of the panel and figure for the Add
+        %buttons.
         set(addPanel,'Visible','off');
         set(toolpurchPanel,'Visible','off');
         set(orText,'Visible','off');
@@ -718,44 +792,56 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
-            %%% Anthony's Work %%%%%%%%%%%%%%
+            %%% Anthony's Work %%%
             function personAdd_callback(obj,eventdata)
+                %gathers the information from the input fields
                 StatusValue=get(person_statusPopup,'Value');
                 NameString=get(person_nameEdit,'String');
                 SchoolString=get(person_schoolEdit,'String');
                 
+                %if the person to add is a Staff
                 if StatusValue==3
+                    %checks if the person already exists
                     for j=1:length(cOut.Staffs)
                         if strcmp(cOut.Staffs{j}.Name,NameString)
                            errordlg('This Staff member already exists!')
                            return
                         end
                     end
+                    %adds the Staff to Database and the toolCheckout obj.
                     L=length(cOut.Staffs);
                     A=sprintf('A%d',L+1);
                     xlswrite('Database.xlsx',{NameString},'Staff',A);
                     cOut.Staffs{end+1}=Staff(NameString);
                     cOut.Staffs{end}.setStatus('Staff');
+                
+                %if the person to be added is a Mentor    
                 elseif StatusValue==2
+                    %checks to see if the Mentor exists
                     for j=1:length(cOut.Mentors)
                         if strcmp(cOut.Mentors{j}.Name,NameString)
                            errordlg('This Mentor already exists!')
                            return
                         end
                     end
+                    %adds the Mentor to the Database and toolCheckout obj
                     L=length(cOut.Mentors);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Mentor',A);
                     cOut.Mentors{end+1}=Mentor(NameString);
                     cOut.Mentors{end}.setSchool(SchoolString);
                     cOut.Mentors{end}.setStatus('Mentor');
+                
+                %if the person to be added is a Student    
                 elseif StatusValue==1
+                    %if the Student doesnt exist
                     for j=1:length(cOut.Students)
                         if strcmp(cOut.Students{j}.Name,NameString)
                            errordlg('This Student already exists!')
                            return
                         end
                     end
+                    %adds the Student to the Database and toolCheckout obj
                     L=length(cOut.Students);
                     A=sprintf('A%d:B%d',L+1,L+1);
                     xlswrite('Database.xlsx',{NameString,SchoolString},'Student',A);
@@ -765,7 +851,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 end
                 msgbox(sprintf('Success! %s has been added!',NameString));
             end
-                %%% End of Anthony's Work %%%%%%%%%%%%%%%%
+                %%% End of Anthony's Work %%%
         end
         
         % Callback for the Add Tool button
@@ -821,16 +907,20 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
-            %%%% Anthony's Work %%%%%%%%%%%%%%%%
+            %%%% Anthony's Work %%%
             function toolAdd_callback(obj,eventdata)
+                %gets information from the input fields.
                 ToolName=get(tool_nameEdit,'String');
                 ToolQuant=str2double(get(tool_quantEdit,'String'));
+                
+                %checks to see if the tool exists or not
                 for j=1:length(cOut.Tools)
                     if strcmp(cOut.Tools{j}.Name,ToolName)
                         errordlg('This Tool already exists!')
                         return
                     end
                 end
+                %adds the tool to the Database and the toolCheckout obj
                 L=length(cOut.Tools);
                 A=sprintf('A%d:B%d',L+1,L+1);
                 xlswrite('Database.xlsx',{ToolName,ToolQuant},'Tool',A);
@@ -838,7 +928,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                 cOut.Tools{end}.setQuantity(ToolQuant);
                 msgbox(sprintf('Success! %d %s has been added!',ToolQuant,ToolName));
             end
-            %%%%% End of Anthony's Work %%%%%%%%%%%%%%
+            %%% End of Anthony's Work %%%
         end
         
         % Callback for the Add Purchasable button
@@ -905,17 +995,21 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             end
             
             % Add button callback
-            %%%% Anthony's Work %%%%%%%%%%%%%
+            
+            %%% Anthony's Work %%%
             function purchaseAdd_callback(obj,eventdata)
+               %gathers the input information
                PurchName=get(purchase_nameEdit,'String');
                PurchQuant=str2double(get(purchase_quantEdit,'String'));
                PurchCost=str2double(get(purchase_pointsEdit,'String'));
+               %checks if the Purchasable exists
                for j=1:length(cOut.Purchasables)
                     if strcmp(cOut.Purchasables{j}.Name,PurchName)
                         errordlg('This Purchasable already exists!')
                         return
                     end
-                end
+               end
+               %adds the Purchasable to the Database and the toolCheckout object 
                L=length(cOut.Purchasables);
                A=sprintf('A%d:C%d',L+1,L+1);
                xlswrite('Database.xlsx',{PurchName,PurchCost,PurchQuant},'Purchase',A);
@@ -924,7 +1018,7 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
                cOut.Purchasables{end}.setQuantity(PurchQuant);
                msgbox(sprintf('Success! %d, %s that cost $%3.3g has been added!',PurchQuant,PurchName,PurchCost));
             end
-            %%%% End of Anthony's Work %%%%%%%%%%%%%%%%%
+            %%% End of Anthony's Work %%%
         end
         
         % Callback for the Add Back button

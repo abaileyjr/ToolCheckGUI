@@ -4,9 +4,8 @@ classdef Person < handle
     %   Student.  Each person has a Name, ID, Status, and a CanPurchase
     %   property.
     %
-    %   The constructor sets the name of the object.
+    %   The constructor sets the name of the Person object.
     %   The following additional methods set respective properties of the class
-    %       setID(obj, id)
     %       setStatus(obj, status)
     %
     %   Created by: Alice Chow, 23404699
