@@ -432,9 +432,9 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
             %Updates the PandaPoints field in the text box on the new screen
             if purchaseWasPressed
                 purchase_schoolText2.String = cOut.Info{2};
-                for l = 1:length(cOut.Schools)
-                    if strcmp(cOut.Schools{l}.Name,purchase_schoolText2.String)
-                        purchase_pointsText2.String=cOut.Schools{l}.PandaPoints;
+                for i = 1:length(cOut.Schools)
+                    if strcmp(cOut.Schools{i}.Name,purchase_schoolText2.String)
+                        purchase_pointsText2.String=cOut.Schools{i}.PandaPoints;
                     end
                 end
             end
