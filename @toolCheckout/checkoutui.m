@@ -227,34 +227,54 @@ addButton = uicontrol(addPanel,'Style','pushbutton',...
         function toolCheckIn_callback(obj,eventdata)
             %%% Written by Alice Chow %%%
             %gathers info from the input fields
-            tool = get(tool_Edit, 'String');
-            quantity = str2num(get(tool_quantityEdit, 'String'));
-            %gets the data from the toolCheckout object.
-            toolArr = cOut.Tools;
-            b = false;
-            %loop that compares the input tool name to the list of tool
-            %names saved, if not it errors out
-            for i = 1:length(toolArr)
-                x = strcmp(tool, toolArr{i}.Name);
-                if x
-                    %calculate the new quantity of tools available. and
-                    %writes that value to the Database and toolChecout obj
-                    b = true; 
-                    toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
-                    A = sprintf('B%d', i);
-                    xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
-                    logtext=sprintf('%s has returned %d of %s',nameText,quantity,tool);
-                    tool_checkedoutTable.Data{end+1,1}=logtext;
-                    %the next three lines keep track of the check out in
-                    %the Tool log.
-                    [~,txt,~]=xlsread('Database.xlsx','Tool Log','A:A');
-                    L=length(txt)+1;
-                    xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Tool Log',sprintf('A%d:B%d',L,L));
-                    msgbox('Tool has been checked in!');
+            staff = get(purchase_staffEdit, 'String');
+            if isempty(staff)
+                % no staff name was inputted
+                errordlg('Please enter a staff name.', 'Error');
+            else
+                staffArray = cOut.Staffs;
+                a = false; % staff existance
+                for i = 1:length(staffArray)
+                    % finding the staff member
+                    x = strcmp(staff, staffArray{i}.Name);
+                    if x
+                        % staff member exists
+                        a = true;
+                        tool = get(tool_Edit, 'String');
+                        quantity = str2num(get(tool_quantityEdit, 'String'));
+                        %gets the data from the toolCheckout object.
+                        toolArr = cOut.Tools;
+                        b = false;
+                        %loop that compares the input tool name to the list of tool
+                        %names saved, if not it errors out
+                        for i = 1:length(toolArr)
+                            x = strcmp(tool, toolArr{i}.Name);
+                            if x
+                                %calculate the new quantity of tools available. and
+                                %writes that value to the Database and toolChecout obj
+                                b = true; 
+                                toolArr{i}.Quantity = toolArr{i}.Quantity + quantity;
+                                A = sprintf('B%d', i);
+                                xlswrite('Database.xlsx', toolArr{i}.Quantity, 'Tool', A);
+                                logtext=sprintf('%s has returned %d of %s',nameText,quantity,tool);
+                                tool_checkedoutTable.Data{end+1,1}=logtext;
+                                %the next three lines keep track of the check out in
+                                %the Tool log.
+                                [~,txt,~]=xlsread('Database.xlsx','Tool Log','A:A');
+                                L=length(txt)+1;
+                                xlswrite('Database.xlsx',{logtext,datestr(datetime('now'))},'Tool Log',sprintf('A%d:B%d',L,L));
+                                msgbox('Tool has been checked in!');
+                            end
+                        end
+                        if ~b
+                            errordlg(sprintf('%s does not exist!', tool), 'Error');
+                        end
+                    end
                 end
-            end
-            if ~b
-                errordlg(sprintf('%s does not exist!', tool), 'Error');
+                if ~a
+                    % not a staff
+                    errordlg(sprintf('%s is not a staff member.', staff), 'Error');
+                end
             end
         end
         
